@@ -125,7 +125,7 @@
              <bool>false</bool>
             </property>
             <property name="text">
-             <string extracomment="1">192.168.1.2</string>
+             <string extracomment="1">192.168.1.206</string>
             </property>
             <property name="placeholderText">
              <string/>
@@ -290,6 +290,44 @@
             </property>
             <property name="text">
              <string>Connect</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonLog">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Trace Off</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -742,7 +780,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="labelJoyXLeftValue_3">
+                       <widget class="QLabel" name="labelJoyXRightValue">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
                           <horstretch>0</horstretch>
@@ -780,7 +818,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="labelJoyYLeftValue_3">
+                       <widget class="QLabel" name="labelJoyYRightValue">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
                           <horstretch>0</horstretch>
@@ -909,10 +947,15 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>hostAddressTextBox</tabstop>
-  <tabstop>spinBoxVideoPort</tabstop>
-  <tabstop>spinBoxControlPort</tabstop>
   <tabstop>pushButtonConnect</tabstop>
+  <tabstop>spinBoxControlPort</tabstop>
+  <tabstop>spinBoxVideoPort</tabstop>
+  <tabstop>radioButtonSafe</tabstop>
+  <tabstop>radioButtonAuto</tabstop>
+  <tabstop>radioButtonMan</tabstop>
+  <tabstop>startTimeButton</tabstop>
+  <tabstop>resetTimeButton</tabstop>
+  <tabstop>horizontalRateSlider</tabstop>
   <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>

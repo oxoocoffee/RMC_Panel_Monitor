@@ -8,21 +8,20 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Sigmux_GUI
-TEMPLATE = app
+QMAKE_CXXFLAGS += -std=gnu++11
+TARGET         = Sigmux_GUI
+TEMPLATE       = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        inputmonitor.cpp \
         videoconnector.cpp \
         joystickconnector.cpp \
-    broadcastudp.cpp
+        broadcastudp.cpp
 
 HEADERS  += mainwindow.h \
-            inputmonitor.h \
             videoconnector.h \
             joystickconnector.h \
-    broadcastudp.h
+            broadcastudp.h
 
 FORMS    += mainwindow.ui
 

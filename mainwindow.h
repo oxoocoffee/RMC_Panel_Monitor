@@ -3,14 +3,15 @@
 
 #include <QMainWindow>
 #include <QLabel>
-#include "inputmonitor.h"
+#include <QFile>
+#include <QMessageBox>
+#include "joystickconnector.h"
 #include "broadcastudp.h"
 
 namespace Ui {
 class MainWindow;
 }
 
-class InputMonitor;
 class VideoConnector;
 class JoystickConnector;
 class BroadcastUDP;
@@ -31,17 +32,24 @@ class MainWindow : public QMainWindow
     private slots:
         void DeviceConnected(const QString& label);
         void DeviceDisconnected(void);
-        void DeviceStatusUpdate(const InputMonitor::eStatus& status, const QString& message);
+        void DeviceStatusUpdate(const JoystickConnector::eStatus& status,
+                                const QString& message);
         void DeviceUpdate(const InputUpdate& state);
+
+        void NetworkMessageTrace(const BroadcastUDP::eDirection dir,
+                                 const QString& message);
 
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();
         void on_horizontalRateSlider_valueChanged(int value);
 
-        void on_startTimeButton_clicked();
+        void on_pushButtonLog_clicked();
 
-private:
+    private:
+        void LogTrace(const QString& message);
         void CloseConnectors(void);
+        void OpenNetworkConnection(void);
+        void CloseNetworkConnection(void);
 
     private:
         Ui::MainWindow*     _ui;
@@ -49,7 +57,8 @@ private:
         QLabel*             _labelHostName;
         QLabel*             _labelDevice;
         QLabel*             _labelDeviceName;
-        InputMonitor*       _monitor;
+        QFile*              _logger;
+        QTextStream*        _textStreamLogger;
         VideoConnector*     _videoConnector;
         JoystickConnector*  _joystickConnector;
         BroadcastUDP*       _udpBroadcaster;
