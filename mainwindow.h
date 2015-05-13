@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include "joystickconnector.h"
+#include "inputThrottler.h"
 #include "broadcastudp.h"
 
 namespace Ui {
@@ -32,12 +33,13 @@ class MainWindow : public QMainWindow
     private slots:
         void DeviceConnected(const QString& label);
         void DeviceDisconnected(void);
-        void DeviceStatusUpdate(const JoystickConnector::eStatus& status,
-                                const QString& message);
         void DeviceUpdate(const InputUpdate& state);
 
         void NetworkMessageTrace(const BroadcastUDP::eDirection dir,
                                  const QString& message);
+
+        void StatusUpdate(const eStatus& status,
+                          const QString& message);
 
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();
@@ -59,6 +61,7 @@ class MainWindow : public QMainWindow
         QLabel*             _labelDeviceName;
         QFile*              _logger;
         QTextStream*        _textStreamLogger;
+        InputThrottler*     _inputThrottler;
         VideoConnector*     _videoConnector;
         JoystickConnector*  _joystickConnector;
         BroadcastUDP*       _udpBroadcaster;

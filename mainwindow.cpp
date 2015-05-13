@@ -41,7 +41,7 @@ void MainWindow::Initialize()
     if( _joystickConnector )
         return;
 
-    qRegisterMetaType<JoystickConnector::eStatus>("JoystickConnector::eStatus");
+    qRegisterMetaType<eStatus>("eStatus");
     qRegisterMetaType<InputUpdate>("InputUpdate");
 
     _logger = new QFile("EDTPanel.log");
@@ -52,6 +52,7 @@ void MainWindow::Initialize()
     connect(_udpBroadcaster, SIGNAL(NetworkMessageTrace(const BroadcastUDP::eDirection, const QString&)),
                                       this, SLOT(NetworkMessageTrace(const BroadcastUDP::eDirection, const QString&)));
 
+    _inputThrottler    = new InputThrottler(this);
     _joystickConnector = new JoystickConnector(this);
 
     connect(_joystickConnector, SIGNAL(DeviceConnected(const QString&)),
@@ -60,15 +61,28 @@ void MainWindow::Initialize()
     connect(_joystickConnector, SIGNAL(DeviceDisconnected(void)),
                                        this, SLOT(DeviceDisconnected(void)));
 
-    connect(_joystickConnector, SIGNAL(DeviceStatusUpdate(const JoystickConnector::eStatus&, const QString&)),
-                                       this, SLOT(DeviceStatusUpdate(const JoystickConnector::eStatus&, const QString&)));
+    connect(_joystickConnector, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
+                                       this, SLOT(StatusUpdate(const eStatus&, const QString&)));
 
     connect(_joystickConnector, SIGNAL(DeviceUpdate(const InputUpdate&)),
                                        this, SLOT(DeviceUpdate(const InputUpdate&)));
 
-    connect( this, SIGNAL(UpdateRateChanged(unsigned int)), _joystickConnector,
+    connect( this, SIGNAL(UpdateRateChanged(unsigned int)), _inputThrottler,
                                        SLOT(UpdateRateChanged(unsigned int)));
 
+    connect(_inputThrottler, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
+                                       this, SLOT(StatusUpdate(const eStatus&, const QString&)));
+
+    connect(_joystickConnector, SIGNAL(DeviceUpdate(const InputUpdate&)),
+                                       _inputThrottler, SLOT(DeviceUpdate(const InputUpdate&)));
+
+    connect(_inputThrottler, SIGNAL(PublishMessage(const QByteArray&)),
+                                       _udpBroadcaster, SLOT(PublishMessage(const QByteArray&)));
+
+    connect(_udpBroadcaster, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
+                                       this, SLOT(StatusUpdate(const eStatus&, const QString&)));
+
+    _inputThrottler->start();
     _joystickConnector->start();
 }
 
@@ -82,11 +96,11 @@ void MainWindow::DeviceDisconnected(void)
     _labelDeviceName->setText("<b>Scanning...</b>");
 }
 
-void MainWindow::DeviceStatusUpdate(const JoystickConnector::eStatus& status, const QString& message)
+void MainWindow::StatusUpdate(const eStatus& status, const QString& message)
 {
     QString msg = QDateTime::currentDateTime().toString("hh:mm:ss");
 
-    if( status == JoystickConnector::eOK )
+    if( status == eOK )
         msg += " OK  - ";
     else
         msg += " ERR - ";
@@ -143,6 +157,7 @@ void MainWindow::OpenNetworkConnection()
     {
         _udpBroadcaster->Connect(_ui->hostAddressTextBox->text(), (quint16)_ui->spinBoxControlPort->value() );
         _ui->pushButtonConnect->setStyleSheet("color: red");
+        _ui->pushButtonConnect->setText("Disconnect");
     }
 }
 
@@ -152,6 +167,7 @@ void MainWindow::CloseNetworkConnection()
     {
         _udpBroadcaster->Disconnect();
         _ui->pushButtonConnect->setStyleSheet("color: green");
+        _ui->pushButtonConnect->setText("Connect");
     }
 }
 
@@ -171,12 +187,21 @@ void MainWindow::CloseConnectors(void)
          delete _joystickConnector;
      }
 
+     if( _inputThrottler )
+     {
+         _inputThrottler->requestInterruption();
+         _inputThrottler->wait();
+         delete _inputThrottler;
+     }
+
      if( _udpBroadcaster )
          _udpBroadcaster->Disconnect();
 }
 
 void    MainWindow::LogTrace(const QString& message)
 {
+    qDebug() << message;
+
     if( _logger->isOpen() == false )
         return;
 
@@ -204,7 +229,7 @@ void MainWindow::on_pushButtonLog_clicked()
     if( _ui->pushButtonLog->isChecked() )
     {
         _ui->pushButtonLog->setStyleSheet("color: red");
-        _ui->pushButtonLog->setText("Trace On");
+        _ui->pushButtonLog->setText("Log On");
         _logger->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 
          QTextStream textStreamLogger(_logger);
@@ -215,7 +240,8 @@ void MainWindow::on_pushButtonLog_clicked()
         QTextStream textStreamLogger(_logger);
         textStreamLogger << "---- Closed ----\n";
         _logger->close();
-        _ui->pushButtonLog->setText("Trace Off");
+        _ui->pushButtonLog->setText("Log Off");
         _ui->pushButtonLog->setStyleSheet("color: green");
     }
 }
+

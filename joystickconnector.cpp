@@ -28,7 +28,7 @@ InputUpdate::eState    InputUpdate::BtnState(unsigned char buttonID) const
 }
 
 JoystickConnector::JoystickConnector(QObject* parent)
-    : QThread(parent), DEAD_ZONE(8000), _sleepRate(20)
+    : QThread(parent), DEAD_ZONE(8000)
 {
 
 }
@@ -40,7 +40,7 @@ JoystickConnector::~JoystickConnector()
 
 void    JoystickConnector::run(void)
 {
-    emit DeviceStatusUpdate( eOK, QString("Joystick thread initialized."));
+    emit StatusUpdate( eOK, QString("Joystick thread initialized."));
 
     while( QThread::currentThread()->isInterruptionRequested() == false )
     {
@@ -66,7 +66,7 @@ void    JoystickConnector::run(void)
         SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
     }
 
-    emit DeviceStatusUpdate( eOK, QString("Joystick thread exiting."));
+    emit StatusUpdate( eOK, QString("Joystick thread terminated."));
 }
 
 void    JoystickConnector::Initialize(void)
@@ -80,7 +80,7 @@ void    JoystickConnector::Initialize(void)
             if( logOnce )
             {
                 logOnce = false;
-                emit DeviceStatusUpdate( eERROR, QString("SDL init failed. SDL Error: %1")
+                emit StatusUpdate( eERROR, QString("SDL init failed. SDL Error: %1")
                                                          .arg( SDL_GetError()));
             }
 
@@ -90,7 +90,7 @@ void    JoystickConnector::Initialize(void)
 
         if( QThread::currentThread()->isInterruptionRequested() == false )
         {
-            emit DeviceStatusUpdate( eOK, QString("Input system initialized."));
+            emit StatusUpdate( eOK, QString("Input system initialized."));
             break;
         }
     }
@@ -112,10 +112,10 @@ SDL_Joystick* JoystickConnector::SelectController(void)
             }
         }
 
-        emit DeviceStatusUpdate( eERROR, QString("Unable to open game controlle. Found: %s").arg(SDL_NumJoysticks()) );
+        emit StatusUpdate( eERROR, QString("Unable to open game controlle. Found: %s").arg(SDL_NumJoysticks()) );
     }
     else
-        emit DeviceStatusUpdate( eERROR, QString("Warning: No joysticks connected. Scanning") );
+        emit StatusUpdate( eERROR, QString("Warning: No joysticks connected. Scanning") );
 
     return 0L;
 }
@@ -169,20 +169,18 @@ void    JoystickConnector::HandleController(void)
                 default:
                     break;
             }
-
-            QThread::msleep(_sleepRate);
         }
     }
 }
 
 void    JoystickConnector::OnControllerButtonEvent( const SDL_ControllerButtonEvent& event )
 {
-    qDebug() << "OnControllerButtonEvent";
+    //qDebug() << "OnControllerButtonEvent";
 }
 
 void    JoystickConnector::OnControllerAxisEvent( const SDL_ControllerAxisEvent& event )
 {
-    qDebug() << "OnControllerAxisEvent";
+    //qDebug() << "OnControllerAxisEvent";
 }
 
 void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
@@ -221,35 +219,26 @@ void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
 
 void    JoystickConnector::OnJoystickButtonEvent( const SDL_JoyButtonEvent& event)
 {
-    qDebug() << "OnJoystickButtonEvent";
+    //qDebug() << "OnJoystickButtonEvent";
 }
 
 void    JoystickConnector::AddControllerEvent( const SDL_ControllerDeviceEvent& event )
 {
-    qDebug() << "AddControllerEvent";
+    //qDebug() << "AddControllerEvent";
 }
 
 void    JoystickConnector::RemoveControllerEvent( const SDL_ControllerDeviceEvent& event )
 {
-    qDebug() << "RemoveControllerEvent";
+    //qDebug() << "RemoveControllerEvent";
 }
 
 void    JoystickConnector::AddJoystickEvent( const SDL_JoyDeviceEvent& event)
 {
-    qDebug() << "AddJoystickEvent";
+    //qDebug() << "AddJoystickEvent";
 }
 
 void    JoystickConnector::RemoveJoystickEvent( const SDL_JoyDeviceEvent& event)
 {
-    qDebug() << "RemoveJoystickEvent";
+    //qDebug() << "RemoveJoystickEvent";
 }
 
-void    JoystickConnector::UpdateRateChanged(unsigned int ms)
-{
-    if( ms > 1000)
-        _sleepRate = 1000;
-    else if (ms < 1 )
-        _sleepRate = 1;
-    else
-        _sleepRate = ms;
-}

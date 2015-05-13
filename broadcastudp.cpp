@@ -14,31 +14,31 @@ BroadcastUDP::~BroadcastUDP()
 
 bool BroadcastUDP::IsConnected(void)
 {
-    return true;
+    return _udpSocket->state() == QAbstractSocket::ConnectedState;
 }
 
 void BroadcastUDP::Connect(const QString& host, quint16 port )
 {
-    if( _udpSocket->isOpen() )
+    if( IsConnected() )
         return;
 
     connect(_udpSocket, SIGNAL(readyRead()),
             this, SLOT(ReadPendingDatagrams()));
 
+    _udpSocket->bind(QHostAddress::LocalHost, port);
     _udpSocket->connectToHost(host, port);
 
-    qDebug() << "BroadcastUDP Connect: " <<
-                host << "  " << _udpSocket->peerAddress().toString();
+    emit StatusUpdate( eOK, QString("BroadcastUDP Connect: ") + host + "  " + QString::number(port));
 }
 
 void BroadcastUDP::Disconnect(void)
 {
-    if( _udpSocket->isOpen() == false )
+    if( IsConnected() == false )
         return;
 
     _udpSocket->disconnectFromHost();
 
-    qDebug() << "BroadcastUDP Disconnect";
+    emit StatusUpdate( eOK, QString("BroadcastUDP Disconnect"));
 
     disconnect(_udpSocket, SIGNAL(readyRead()),
                this, SLOT(ReadPendingDatagrams()));
@@ -46,7 +46,7 @@ void BroadcastUDP::Disconnect(void)
 
 void    BroadcastUDP::Send(const QByteArray& buffer)
 {
-    if( _udpSocket->isOpen() == false )
+    if( IsConnected() == false )
         return;
 
     emit NetworkMessageTrace(eOut, QString(buffer.toHex()));
@@ -56,7 +56,7 @@ void    BroadcastUDP::Send(const QByteArray& buffer)
 
 void    BroadcastUDP::ReadPendingDatagrams()
 {
-    qDebug() << "BroadcastUDP Reader Created";
+    emit StatusUpdate( eOK, QString("BroadcastUDP Reader Created"));
 
     QByteArray   datagram;
     QHostAddress host;
@@ -76,10 +76,15 @@ void    BroadcastUDP::ReadPendingDatagrams()
         datagram.clear();
     }
 
-    qDebug() << "BroadcastUDP Reader Finished";
+    emit StatusUpdate( eOK, QString("BroadcastUDP Reader Finished"));
 }
 
 void    BroadcastUDP::ProcessTheDatagram(const QByteArray& buffer)
 {
     emit NetworkMessageTrace(eIn, QString(buffer.toHex()));
+}
+
+void    BroadcastUDP::PublishMessage(const QByteArray& buffer)
+{
+    Send(buffer);
 }

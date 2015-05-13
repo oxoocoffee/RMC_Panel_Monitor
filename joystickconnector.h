@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <SDL2/SDL.h>
+#include "commonhdr.h"
 
 class InputUpdate
 {
@@ -52,23 +53,12 @@ class JoystickConnector : public QThread
             explicit JoystickConnector(QObject* parent = 0L);
             virtual ~JoystickConnector();
 
-        enum eStatus
-        {
-            eOK,
-            eERROR
-        };
-
      signals:
         void    DeviceConnected(const QString& label);
         void    DeviceDisconnected(void);
-        void    DeviceStatusUpdate(const JoystickConnector::eStatus& status, const QString& message);
         void    DeviceUpdate(const InputUpdate& state);
 
-     public slots:
-        void    UpdateRateChanged(unsigned int ms) ;
-
-     protected:
-        void    run(void) Q_DECL_OVERRIDE;
+        void    StatusUpdate(const eStatus& status, const QString& message);
 
      private:
         void            Initialize(void);
@@ -84,8 +74,10 @@ class JoystickConnector : public QThread
         void            RemoveJoystickEvent( const SDL_JoyDeviceEvent& event);
 
      private:
-        int         _sleepRate;
         InputUpdate _currentState;
+
+    protected:
+       void    run(void) Q_DECL_OVERRIDE;
 };
 
 

@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QUdpSocket>
+#include "commonhdr.h"
 
 class BroadcastUDP : public QObject
 {
@@ -24,13 +25,15 @@ class BroadcastUDP : public QObject
            void     Send(const QByteArray& buffer);
 
         public slots:
+           void     ReadPendingDatagrams(void);
+           void     PublishMessage(const QByteArray& buffer);
 
         signals:
            void    NetworkMessageTrace(const BroadcastUDP::eDirection dir,
                                        const QString& message);
+           void    StatusUpdate(const eStatus& status, const QString& message);
 
         private:
-           void    ReadPendingDatagrams(void);
            void    ProcessTheDatagram(const QByteArray& buffer);
 
         private:
