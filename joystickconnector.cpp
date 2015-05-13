@@ -187,28 +187,28 @@ void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
 {
     if( event.axis == SDL_CONTROLLER_AXIS_LEFTX )
     {
-        if( qAbs(event.value) < DEAD_ZONE)
+        if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisLeft._x = 0;
         else
-            _currentState._axisLeft._x = event.value;
+            _currentState._axisLeft._x = (int)event.value;
     }
     else if( event.axis == SDL_CONTROLLER_AXIS_LEFTY )
     {
-        if( qAbs(event.value) < DEAD_ZONE)
+        if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisLeft._y = 0;
         else
             _currentState._axisLeft._y = event.value;
     }
     else if( event.axis == SDL_CONTROLLER_AXIS_RIGHTX )
     {
-        if( qAbs(event.value) < DEAD_ZONE)
+        if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisRight._x = 0;
         else
             _currentState._axisRight._x = event.value;
     }
     else if(event.axis == SDL_CONTROLLER_AXIS_RIGHTY)
     {
-        if( qAbs(event.value) < DEAD_ZONE)
+        if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisRight._y = 0;
         else
             _currentState._axisRight._y = event.value;

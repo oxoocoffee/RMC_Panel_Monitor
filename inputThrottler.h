@@ -5,6 +5,10 @@
 #include <QString>
 #include <QMutex>
 
+#define JOY_RANGE               32767
+#define BITS_PER_MSG_WHEELE     4               // 3 + signe bit
+#define JOY_PER_MSG_SCALAR      (short)(JOY_RANGE / 7)
+
 class InputThrottler : public QThread
 {
     Q_OBJECT
@@ -19,6 +23,9 @@ class InputThrottler : public QThread
     signals:
         void    StatusUpdate(const eStatus& status, const QString& message);
         void    PublishMessage(const QByteArray& buffer);
+
+    private:
+        void    PrintBits();
 
     private:
         InputUpdate _state;

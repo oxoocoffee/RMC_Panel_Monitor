@@ -15,14 +15,14 @@ class InputUpdate
             friend class JoystickConnector;
 
             public:
-                Axis(void) : _x(0.0f), _y(0.0f) {}
+                Axis(void) : _x(0), _y(0) {}
 
-                inline int X(void) const { return _x; }
-                inline int Y(void) const { return _y; }
+                inline short X(void) const { return _x; }
+                inline short Y(void) const { return _y; }
 
             private:
-                int _x;
-                int _y;
+                short _x;
+                short _y;
         };
 
         InputUpdate(void) : _btnState(0) {}
