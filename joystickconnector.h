@@ -17,12 +17,12 @@ class InputUpdate
             public:
                 Axis(void) : _x(0), _y(0) {}
 
-                inline short X(void) const { return _x; }
-                inline short Y(void) const { return _y; }
+                inline int X(void) const { return _x; }
+                inline int Y(void) const { return _y; }
 
             private:
-                short _x;
-                short _y;
+                int _x;
+                int _y;
         };
 
         InputUpdate(void) : _btnState(0) {}
@@ -52,6 +52,8 @@ class JoystickConnector : public QThread
     public:
             explicit JoystickConnector(QObject* parent = 0L);
             virtual ~JoystickConnector();
+
+            void     Quit();
 
      signals:
         void    DeviceConnected(const QString& label);

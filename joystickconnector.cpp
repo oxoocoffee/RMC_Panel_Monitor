@@ -38,6 +38,20 @@ JoystickConnector::~JoystickConnector()
 
 }
 
+void    JoystickConnector::Quit()
+{
+    requestInterruption();
+
+    // Push event to wake up so thread can exit
+    SDL_Event sdlevent;
+    sdlevent.type = SDL_KEYDOWN;
+    sdlevent.key.keysym.sym = SDLK_1;
+
+    SDL_PushEvent(&sdlevent);
+
+    wait();
+}
+
 void    JoystickConnector::run(void)
 {
     emit StatusUpdate( eOK, QString("Joystick thread initialized."));
@@ -127,8 +141,8 @@ void    JoystickConnector::HandleController(void)
 
     while( QThread::currentThread()->isInterruptionRequested() == false )
     {
-        if( SDL_PollEvent( &event ) )
-        //if( SDL_WaitEvent(&event ) )
+        //if( SDL_PollEvent( &event ) )
+        if( SDL_WaitEvent(&event ) )
         {
             switch( event.type )
             {
@@ -190,14 +204,14 @@ void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
         if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisLeft._x = 0;
         else
-            _currentState._axisLeft._x = (int)event.value;
+            _currentState._axisLeft._x = event.value;
     }
     else if( event.axis == SDL_CONTROLLER_AXIS_LEFTY )
     {
         if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisLeft._y = 0;
         else
-            _currentState._axisLeft._y = event.value;
+            _currentState._axisLeft._y = -event.value;
     }
     else if( event.axis == SDL_CONTROLLER_AXIS_RIGHTX )
     {
@@ -211,7 +225,7 @@ void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
         if( qAbs<int>(event.value) < DEAD_ZONE)
             _currentState._axisRight._y = 0;
         else
-            _currentState._axisRight._y = event.value;
+            _currentState._axisRight._y = -event.value;
     }
 
     emit DeviceUpdate( _currentState );

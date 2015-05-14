@@ -28,8 +28,8 @@ void    InputThrottler::run(void)
 
             _byteArray.clear();
 
-            _byteArray[0] = (_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR);
-            _byteArray[1] = (_state.AxisLeft().X() / JOY_PER_MSG_SCALAR);
+            _byteArray[0] = (_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F;
+            _byteArray[1] = 0;//(_state.AxisLeft().X() / JOY_PER_MSG_SCALAR);
 
             PrintBits();
 
@@ -69,14 +69,18 @@ void    InputThrottler::UpdateRateChanged(unsigned int ms)
 
 void    InputThrottler::PrintBits()
 {
+    QString msg;
     QBitArray bits(_byteArray.count()*8);
 
     // Convert from QByteArray to QBitArray
     for(int i=0; i < _byteArray.count(); ++i)
     {
-        for(int b=0; b<8;b)
+        for(int b=0; b<8; ++b)
         {
-            bits.setBit( i*8+b, _byteArray.at(i)&(1<<(7-b)) );
+            //bits.setBit( i*8+b, _byteArray.at(i)&(1<<(7-b)) );
+            msg.append( (_byteArray.at(i) & (1<<(7-b))) ? '1' : '0');
         }
     }
+
+    //qDebug() << msg;
 }

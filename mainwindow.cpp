@@ -96,18 +96,10 @@ void MainWindow::DeviceDisconnected(void)
     _labelDeviceName->setText("<b>Scanning...</b>");
 }
 
-void MainWindow::StatusUpdate(const eStatus& status, const QString& message)
+void MainWindow::StatusUpdate(const eStatus& status,
+                              const QString& message)
 {
-    QString msg = QDateTime::currentDateTime().toString("hh:mm:ss");
-
-    if( status == eOK )
-        msg += " OK  - ";
-    else
-        msg += " ERR - ";
-
-    msg +=  message;
-
-    LogTrace(msg);
+    LogTrace(status, message);
 }
 
 void MainWindow::DeviceUpdate(const InputUpdate& state)
@@ -182,8 +174,7 @@ void MainWindow::CloseConnectors(void)
 
      if( _joystickConnector )
      {
-         _joystickConnector->requestInterruption();
-         _joystickConnector->wait();
+         _joystickConnector->Quit();
          delete _joystickConnector;
      }
 
@@ -198,9 +189,25 @@ void MainWindow::CloseConnectors(void)
          _udpBroadcaster->Disconnect();
 }
 
-void    MainWindow::LogTrace(const QString& message)
+void    MainWindow::LogTrace(const eStatus& status,
+                             const QString& message)
 {
-    qDebug() << message;
+    QString msg = QDateTime::currentDateTime().toString("hh:mm:ss");
+
+    if( status == eOK )
+    {
+        msg += " OK  - ";
+        msg +=  message;
+
+        qDebug() << message;
+    }
+    else
+    {
+        msg += " ERR - ";
+        msg +=  message;
+
+        qWarning() << message;
+    }
 
     if( _logger->isOpen() == false )
         return;

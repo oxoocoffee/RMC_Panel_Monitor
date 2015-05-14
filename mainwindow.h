@@ -48,7 +48,8 @@ class MainWindow : public QMainWindow
         void on_pushButtonLog_clicked();
 
     private:
-        void LogTrace(const QString& message);
+        void LogTrace(const eStatus& status,
+                      const QString& message);
         void CloseConnectors(void);
         void OpenNetworkConnection(void);
         void CloseNetworkConnection(void);
