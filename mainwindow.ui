@@ -349,130 +349,155 @@
           </property>
           <item>
            <widget class="QGroupBox" name="control">
-            <property name="title">
-             <string>GroupBox</string>
+            <property name="maximumSize">
+             <size>
+              <width>400</width>
+              <height>16777215</height>
+             </size>
             </property>
-            <widget class="QFrame" name="frame">
-             <property name="geometry">
-              <rect>
-               <x>1</x>
-               <y>20</y>
-               <width>141</width>
-               <height>121</height>
-              </rect>
+            <property name="title">
+             <string>Count Down</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <property name="spacing">
+              <number>1</number>
              </property>
-             <property name="frameShape">
-              <enum>QFrame::Box</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <widget class="QRadioButton" name="radioButtonSafe">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>20</y>
-                <width>102</width>
-                <height>20</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Safety Mode</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-             <widget class="QRadioButton" name="radioButtonMan">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>80</y>
-                <width>111</width>
-                <height>20</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Manual Mode</string>
-              </property>
-             </widget>
-             <widget class="QRadioButton" name="radioButtonAuto">
-              <property name="geometry">
-               <rect>
-                <x>10</x>
-                <y>50</y>
-                <width>102</width>
-                <height>20</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Auto Mode</string>
-              </property>
-             </widget>
-            </widget>
-            <widget class="QLCDNumber" name="countdownTimer">
-             <property name="geometry">
-              <rect>
-               <x>160</x>
-               <y>20</y>
-               <width>201</width>
-               <height>81</height>
-              </rect>
-             </property>
-             <property name="autoFillBackground">
-              <bool>true</bool>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::WinPanel</enum>
-             </property>
-             <property name="lineWidth">
-              <number>2</number>
-             </property>
-             <property name="midLineWidth">
+             <property name="leftMargin">
               <number>0</number>
              </property>
-             <property name="smallDecimalPoint">
-              <bool>true</bool>
+             <property name="topMargin">
+              <number>0</number>
              </property>
-             <property name="digitCount">
-              <number>4</number>
+             <property name="rightMargin">
+              <number>0</number>
              </property>
-             <property name="segmentStyle">
-              <enum>QLCDNumber::Flat</enum>
+             <property name="bottomMargin">
+              <number>0</number>
              </property>
-             <property name="value" stdset="0">
-              <double>10.000000000000000</double>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="startTimeButton">
-             <property name="geometry">
-              <rect>
-               <x>154</x>
-               <y>110</y>
-               <width>161</width>
-               <height>32</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Start Time</string>
-             </property>
-            </widget>
-            <widget class="QPushButton" name="resetTimeButton">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="geometry">
-              <rect>
-               <x>310</x>
-               <y>110</y>
-               <width>61</width>
-               <height>32</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-            </widget>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QLCDNumber" name="countdownTimer">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>1</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>true</bool>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>1</number>
+                 </property>
+                 <property name="midLineWidth">
+                  <number>0</number>
+                 </property>
+                 <property name="smallDecimalPoint">
+                  <bool>false</bool>
+                 </property>
+                 <property name="digitCount">
+                  <number>5</number>
+                 </property>
+                 <property name="segmentStyle">
+                  <enum>QLCDNumber::Flat</enum>
+                 </property>
+                 <property name="value" stdset="0">
+                  <double>10.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QPushButton" name="startTimeButton">
+                   <property name="text">
+                    <string>Start Time</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="resetTimeButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Reset</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox">
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="title">
+                  <string>Operation Mode</string>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="spacing">
+                   <number>1</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_3">
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonSafe">
+                      <property name="text">
+                       <string>Safety Mode</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonAuto">
+                      <property name="text">
+                       <string>Auto Mode</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonMan">
+                      <property name="text">
+                       <string>Manual Mode</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
@@ -624,7 +649,7 @@
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>0</height>
+                   <height>85</height>
                   </size>
                  </property>
                  <property name="maximumSize">

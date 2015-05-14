@@ -6,6 +6,8 @@
 #include <QStandardItemModel>
 #include <stdexcept>
 
+#define TIME_IN_GAME    10  // Init LCD Timer value
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), _ui(new Ui::MainWindow),
     _videoConnector(0L), _joystickConnector(0L), _udpBroadcaster(0L)
@@ -31,6 +33,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     CloseConnectors();
+
+    if( _logger)
+        delete _logger;
 
     if( _ui )
         delete _ui;
@@ -84,6 +89,38 @@ void MainWindow::Initialize()
 
     _inputThrottler->start();
     _joystickConnector->start();
+
+    _lcdTimer     = new QTimer(this);
+    connect(_lcdTimer, SIGNAL(timeout()), this, SLOT(updateLCD()));\
+
+    ResetLCD();
+}
+
+void MainWindow::ResetLCD()
+{
+    //TIME_IN_GAME
+    _ui->countdownTimer->display("10.00");
+    _lcdTimeValue = QTime(0, TIME_IN_GAME, 0);
+    _ui->countdownTimer->setPalette(Qt::green);
+}
+
+void MainWindow::updateLCD()
+{
+    _lcdTimeValue.setHMS(0, _lcdTimeValue.addSecs(-1).minute(),
+                            _lcdTimeValue.addSecs(-1).second());
+
+    int sec = QTime(0,0).secsTo(_lcdTimeValue);
+
+    if( sec == 60 )
+        _ui->countdownTimer->setPalette(Qt::red);
+    else if(sec == 0)
+    {
+        _lcdTimer->stop();
+        _ui->resetTimeButton->setEnabled(true);
+        _ui->startTimeButton->setEnabled(false);
+    }
+
+    _ui->countdownTimer->display(_lcdTimeValue.toString());
 }
 
 void MainWindow::DeviceConnected(const QString& label)
@@ -252,3 +289,42 @@ void MainWindow::on_pushButtonLog_clicked()
     }
 }
 
+
+void MainWindow::on_radioButtonSafe_clicked()
+{
+
+}
+
+void MainWindow::on_radioButtonAuto_clicked()
+{
+
+}
+
+void MainWindow::on_radioButtonMan_clicked()
+{
+
+}
+
+void MainWindow::on_startTimeButton_clicked()
+{
+    if( _lcdTimer->isActive())
+    {
+        _lcdTimer->stop();
+        _ui->resetTimeButton->setEnabled(true);
+        _ui->startTimeButton->setText("Restart Time");
+    }
+    else
+    {
+        _ui->resetTimeButton->setEnabled(false);
+        _ui->countdownTimer->setPalette(Qt::green);
+        _lcdTimer->start(1000);
+        _ui->startTimeButton->setText("Pause Time");
+    }
+}
+
+void MainWindow::on_resetTimeButton_clicked()
+{
+    ResetLCD();
+
+    _ui->startTimeButton->setText("Start Time");
+}

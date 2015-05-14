@@ -28,13 +28,11 @@ void    InputThrottler::run(void)
 
             _byteArray.clear();
 
-            _byteArray[0] = (_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F;
+            _byteArray[0] = ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
+                            ((_state.AxisLeft().X() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
             _byteArray[1] = 0;//(_state.AxisLeft().X() / JOY_PER_MSG_SCALAR);
 
             PrintBits();
-
-            //qDebug() << "AxisLeft X " << (_state.AxisLeft().X() / JOY_PER_MSG_SCALAR);
-            //qDebug() << "AxisLeft Y " << (_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR);
 
             emit PublishMessage(_byteArray);
         }
@@ -80,7 +78,10 @@ void    InputThrottler::PrintBits()
             //bits.setBit( i*8+b, _byteArray.at(i)&(1<<(7-b)) );
             msg.append( (_byteArray.at(i) & (1<<(7-b))) ? '1' : '0');
         }
+
+        if( i+1 != _byteArray.count() )
+            msg.append(" ");
     }
 
-    //qDebug() << msg;
+    qDebug() << msg;
 }

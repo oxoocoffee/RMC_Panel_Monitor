@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QFile>
+#include <QTimer>
+#include <QTime>
 #include <QMessageBox>
 #include "joystickconnector.h"
 #include "inputThrottler.h"
@@ -41,18 +43,31 @@ class MainWindow : public QMainWindow
         void StatusUpdate(const eStatus& status,
                           const QString& message);
 
+        void updateLCD();
+
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();
         void on_horizontalRateSlider_valueChanged(int value);
 
         void on_pushButtonLog_clicked();
 
+        void on_radioButtonSafe_clicked();
+
+        void on_radioButtonAuto_clicked();
+
+        void on_radioButtonMan_clicked();
+
+        void on_startTimeButton_clicked();
+
+        void on_resetTimeButton_clicked();
+
     private:
-        void LogTrace(const eStatus& status,
-                      const QString& message);
-        void CloseConnectors(void);
-        void OpenNetworkConnection(void);
-        void CloseNetworkConnection(void);
+        void    LogTrace(const eStatus& status,
+                         const QString& message);
+        void    CloseConnectors(void);
+        void    OpenNetworkConnection(void);
+        void    CloseNetworkConnection(void);
+        void    ResetLCD();
 
     private:
         Ui::MainWindow*     _ui;
@@ -61,6 +76,8 @@ class MainWindow : public QMainWindow
         QLabel*             _labelDevice;
         QLabel*             _labelDeviceName;
         QFile*              _logger;
+        QTimer*             _lcdTimer;
+        QTime               _lcdTimeValue;
         QTextStream*        _textStreamLogger;
         InputThrottler*     _inputThrottler;
         VideoConnector*     _videoConnector;
