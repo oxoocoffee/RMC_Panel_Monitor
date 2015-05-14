@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow
         void BitsUpdate(const QString& bits);
 
         void ActuatorState( int level );
+        void DiggingState(bool enabled);
 
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();

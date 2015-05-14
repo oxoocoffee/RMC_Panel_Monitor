@@ -91,6 +91,9 @@ void MainWindow::Initialize()
     connect(_inputThrottler, SIGNAL(ActuatorState(int)),
                                        this, SLOT(ActuatorState(int)));
 
+    connect(_inputThrottler, SIGNAL(DiggingState(bool)),
+                                       this, SLOT(DiggingState(bool)));
+
     connect(_udpBroadcaster, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
                                        this, SLOT(StatusUpdate(const eStatus&, const QString&)));
 
@@ -105,6 +108,9 @@ void MainWindow::Initialize()
 
     ResetLCD();
 
+    _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(0, 200, 0));
+    _ui->labelDig->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
+
     _ui->labelJoyHz->setText( QString::number(1000.0 / (double)_ui->horizontalRateSlider->value(),
                                               'f', 2) );
 }
@@ -114,7 +120,7 @@ void MainWindow::ResetLCD()
     //TIME_IN_GAME
     _ui->countdownTimer->display("10.00");
     _lcdTimeValue = QTime(0, TIME_IN_GAME, 0);
-    _ui->countdownTimer->setPalette(Qt::green);
+    _ui->countdownTimer->setPalette(QColor::fromRgb(0, 200, 0));
 }
 
 void MainWindow::BitsUpdate(const QString& bits)
@@ -130,7 +136,7 @@ void MainWindow::updateLCD()
     int sec = QTime(0,0).secsTo(_lcdTimeValue);
 
     if( sec == 60 )
-        _ui->countdownTimer->setPalette(Qt::red);
+        _ui->countdownTimer->setPalette(QColor::fromRgb(240, 0, 0));
     else if(sec == 0)
     {
         _lcdTimer->stop();
@@ -169,6 +175,27 @@ void MainWindow::DeviceUpdate(const InputUpdate& state)
 void MainWindow::ActuatorState( int level )
 {
     _ui->lcdActuatorNumber->display( level );
+
+    if( level == 0)
+        _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(240, 0, 0));
+    else if (level == 3)
+        _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(0, 200, 0));
+    else
+        _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(255, 135, 0));
+}
+
+void MainWindow::DiggingState(bool enabled)
+{
+    if( enabled )
+    {
+        _ui->labelDig->setText("ON");
+        _ui->labelDig->setStyleSheet("QLabel { background-color : red; }");
+    }
+    else
+    {
+        _ui->labelDig->setText("OFF");
+        _ui->labelDig->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
+    }
 }
 
 void MainWindow::on_horizontalRateSlider_sliderReleased()

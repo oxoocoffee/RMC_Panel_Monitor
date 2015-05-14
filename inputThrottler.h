@@ -37,6 +37,7 @@ class InputThrottler : public QThread
         void    BitsUpdate(const QString& message);
         void    PublishMessage(const QByteArray& buffer);
         void    ActuatorState( int level );
+        void    DiggingState(bool enabled);
 
     private:
         void    PackBits();
@@ -49,6 +50,7 @@ class InputThrottler : public QThread
         QMutex          _lock;
         int             _actuatorLevel;
         bool            _updated;
+        bool            _digging;
         int             _sleepRate;
 
     protected:

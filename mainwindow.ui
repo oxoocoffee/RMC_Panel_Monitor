@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>765</width>
-    <height>520</height>
+    <width>730</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>550</width>
-    <height>400</height>
+    <width>730</width>
+    <height>500</height>
    </size>
   </property>
   <property name="baseSize">
@@ -359,21 +359,6 @@
              <string>Count Down</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
-             <property name="spacing">
-              <number>1</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
@@ -445,10 +430,22 @@
                  <item>
                   <widget class="QGroupBox" name="groupBox">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>115</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>115</width>
+                     <height>16777215</height>
+                    </size>
                    </property>
                    <property name="autoFillBackground">
                     <bool>false</bool>
@@ -477,6 +474,12 @@
                     </property>
                     <item>
                      <widget class="QRadioButton" name="radioButtonSafe">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
                       <property name="text">
                        <string>Safety Mode</string>
                       </property>
@@ -503,9 +506,56 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QGroupBox" name="groupBox_2">
+                   <property name="title">
+                    <string>Dig Status</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_10">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="labelDig">
+                      <property name="font">
+                       <font>
+                        <pointsize>34</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Box</enum>
+                      </property>
+                      <property name="text">
+                       <string>OFF</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QGroupBox" name="groupBoxActuator">
                    <property name="title">
                     <string>Actuator Level</string>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout_10">
                     <property name="spacing">
@@ -526,7 +576,7 @@
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_4">
                       <property name="spacing">
-                       <number>1</number>
+                       <number>0</number>
                       </property>
                       <item>
                        <widget class="QProgressBar" name="progressBar">
@@ -570,11 +620,31 @@
                           <verstretch>0</verstretch>
                          </sizepolicy>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                         </font>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::Panel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Plain</enum>
+                        </property>
                         <property name="lineWidth">
                          <number>1</number>
                         </property>
                         <property name="smallDecimalPoint">
                          <bool>false</bool>
+                        </property>
+                        <property name="digitCount">
+                         <number>1</number>
+                        </property>
+                        <property name="segmentStyle">
+                         <enum>QLCDNumber::Flat</enum>
                         </property>
                        </widget>
                       </item>
@@ -860,6 +930,11 @@
                           <height>0</height>
                          </size>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
                         </property>
@@ -898,6 +973,11 @@
                           <height>0</height>
                          </size>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
                         </property>
@@ -915,7 +995,7 @@
                          <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
-                         <enum>QSizePolicy::Minimum</enum>
+                         <enum>QSizePolicy::MinimumExpanding</enum>
                         </property>
                         <property name="sizeHint" stdset="0">
                          <size>
@@ -951,6 +1031,11 @@
                           <width>53</width>
                           <height>0</height>
                          </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
                         </property>
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
@@ -990,6 +1075,11 @@
                           <height>0</height>
                          </size>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
                         </property>
@@ -1005,6 +1095,9 @@
                     </item>
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_5">
+                      <property name="spacing">
+                       <number>1</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelBits">
                         <property name="sizePolicy">
@@ -1013,8 +1106,13 @@
                           <verstretch>0</verstretch>
                          </sizepolicy>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>20</pointsize>
+                         </font>
+                        </property>
                         <property name="frameShape">
-                         <enum>QFrame::Box</enum>
+                         <enum>QFrame::NoFrame</enum>
                         </property>
                         <property name="text">
                          <string>00000000 00000000</string>
@@ -1033,7 +1131,7 @@
                          <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
-                         <enum>QSizePolicy::Minimum</enum>
+                         <enum>QSizePolicy::MinimumExpanding</enum>
                         </property>
                         <property name="sizeHint" stdset="0">
                          <size>
@@ -1066,8 +1164,14 @@
                         </property>
                         <property name="minimumSize">
                          <size>
-                          <width>60</width>
+                          <width>0</width>
                           <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>53</width>
+                          <height>16777215</height>
                          </size>
                         </property>
                         <property name="frameShape">
