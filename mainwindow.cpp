@@ -187,6 +187,9 @@ void MainWindow::OpenNetworkConnection()
         _udpBroadcaster->Connect(_ui->hostAddressTextBox->text(), (quint16)_ui->spinBoxControlPort->value() );
         _ui->pushButtonConnect->setStyleSheet("color: red");
         _ui->pushButtonConnect->setText("Disconnect");
+        _ui->spinBoxControlPort->setEnabled(false);
+        _ui->spinBoxVideoPort->setEnabled(false);
+        _ui->hostAddressTextBox->setEnabled(false);
     }
 }
 
@@ -197,6 +200,9 @@ void MainWindow::CloseNetworkConnection()
         _udpBroadcaster->Disconnect();
         _ui->pushButtonConnect->setStyleSheet("color: green");
         _ui->pushButtonConnect->setText("Connect");
+        _ui->spinBoxControlPort->setEnabled(true);
+        _ui->spinBoxVideoPort->setEnabled(true);
+        _ui->hostAddressTextBox->setEnabled(true);
     }
 }
 
@@ -292,17 +298,17 @@ void MainWindow::on_pushButtonLog_clicked()
 
 void MainWindow::on_radioButtonSafe_clicked()
 {
-
+    _inputThrottler->SetMode(InputThrottler::eSafety);
 }
 
 void MainWindow::on_radioButtonAuto_clicked()
 {
-
+    _inputThrottler->SetMode(InputThrottler::eAuto);
 }
 
 void MainWindow::on_radioButtonMan_clicked()
 {
-
+    _inputThrottler->SetMode(InputThrottler::eManual);
 }
 
 void MainWindow::on_startTimeButton_clicked()

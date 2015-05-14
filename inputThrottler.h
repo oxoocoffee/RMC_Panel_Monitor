@@ -13,8 +13,21 @@ class InputThrottler : public QThread
 {
     Q_OBJECT
     public:
+
+        enum eOperationMode
+        {
+            eSafety = 0,
+            eAuto,
+            eManual
+        };
+
         explicit InputThrottler(QObject* parent = 0L);
         virtual ~InputThrottler();
+
+        inline void SetMode(const eOperationMode mode)
+        {
+            _mode = mode;
+        }
 
     public slots:
         void    DeviceUpdate(const InputUpdate& state);
@@ -28,11 +41,12 @@ class InputThrottler : public QThread
         void    PrintBits();
 
     private:
-        InputUpdate _state;
-        QByteArray  _byteArray;
-        QMutex      _lock;
-        bool        _updated;
-        int         _sleepRate;
+        InputUpdate     _state;
+        eOperationMode  _mode;
+        QByteArray      _byteArray;
+        QMutex          _lock;
+        bool            _updated;
+        int             _sleepRate;
 
     protected:
        void    run(void) Q_DECL_OVERRIDE;

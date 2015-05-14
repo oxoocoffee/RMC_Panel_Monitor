@@ -3,7 +3,7 @@
 #include <QDebug>
 
 InputThrottler::InputThrottler(QObject* parent)
-    : QThread(parent), _updated(false), _sleepRate(20)
+    : QThread(parent), _mode(eSafety), _updated(false), _sleepRate(20)
 {
     _byteArray.reserve(2);
 }
@@ -30,7 +30,7 @@ void    InputThrottler::run(void)
 
             _byteArray[0] = ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
                             ((_state.AxisLeft().X() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
-            _byteArray[1] = 0;//(_state.AxisLeft().X() / JOY_PER_MSG_SCALAR);
+            _byteArray[1] = (char)_mode;
 
             PrintBits();
 
@@ -68,20 +68,16 @@ void    InputThrottler::UpdateRateChanged(unsigned int ms)
 void    InputThrottler::PrintBits()
 {
     QString msg;
-    QBitArray bits(_byteArray.count()*8);
 
     // Convert from QByteArray to QBitArray
-    for(int i=0; i < _byteArray.count(); ++i)
+    for(int i=_byteArray.count()-1; i >=0 ; --i)
     {
-        for(int b=0; b<8; ++b)
-        {
-            //bits.setBit( i*8+b, _byteArray.at(i)&(1<<(7-b)) );
+        for(int b(0); b < 8; ++b)
             msg.append( (_byteArray.at(i) & (1<<(7-b))) ? '1' : '0');
-        }
 
-        if( i+1 != _byteArray.count() )
+        if( i != 0 )
             msg.append(" ");
     }
 
-    qDebug() << msg;
+    emit StatusUpdate( eOK, msg);
 }
