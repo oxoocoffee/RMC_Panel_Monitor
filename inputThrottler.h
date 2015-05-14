@@ -24,20 +24,22 @@ class InputThrottler : public QThread
         explicit InputThrottler(QObject* parent = 0L);
         virtual ~InputThrottler();
 
-        inline void SetMode(const eOperationMode mode)
-        {
-            _mode = mode;
-        }
+        void SetMode(const eOperationMode mode);
 
     public slots:
         void    DeviceUpdate(const InputUpdate& state);
         void    UpdateRateChanged(unsigned int ms);
+        void    DeviceBtnUpdate( eBtnState state,
+                                 int btnID );
 
     signals:
         void    StatusUpdate(const eStatus& status, const QString& message);
+        void    BitsUpdate(const QString& message);
         void    PublishMessage(const QByteArray& buffer);
+        void    ActuatorState( int level );
 
     private:
+        void    PackBits();
         void    PrintBits();
 
     private:
@@ -45,6 +47,7 @@ class InputThrottler : public QThread
         eOperationMode  _mode;
         QByteArray      _byteArray;
         QMutex          _lock;
+        int             _actuatorLevel;
         bool            _updated;
         int             _sleepRate;
 

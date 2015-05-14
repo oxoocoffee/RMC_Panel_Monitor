@@ -7,5 +7,11 @@ enum eStatus
     eERROR
 };
 
+enum eBtnState
+{
+    eDown,
+    eUp
+};
+
 #endif // COMMONHDR_H
 

@@ -3,7 +3,8 @@
 #include <QDebug>
 
 InputThrottler::InputThrottler(QObject* parent)
-    : QThread(parent), _mode(eSafety), _updated(false), _sleepRate(20)
+    : QThread(parent), _mode(eSafety), _actuatorLevel(0),
+      _updated(false), _sleepRate(20)
 {
     _byteArray.reserve(2);
 }
@@ -26,12 +27,7 @@ void    InputThrottler::run(void)
             _updated = false;
             _lock.unlock();
 
-            _byteArray.clear();
-
-            _byteArray[0] = ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
-                            ((_state.AxisLeft().X() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
-            _byteArray[1] = (char)_mode;
-
+            PackBits();
             PrintBits();
 
             emit PublishMessage(_byteArray);
@@ -43,6 +39,27 @@ void    InputThrottler::run(void)
     }
 
     emit StatusUpdate( eOK, QString("Input Throttler thread terminated"));
+}
+
+void InputThrottler::SetMode(const eOperationMode mode)
+{
+    _lock.lock();
+
+    _updated = true;
+    _mode    = mode;
+
+    _lock.unlock();
+
+    emit PublishMessage(_byteArray);
+}
+
+void InputThrottler::PackBits()
+{
+    _byteArray.clear();
+
+    _byteArray[0] = ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
+                    ((_state.AxisLeft().X() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
+    _byteArray[1] = (char)_mode | ((_actuatorLevel << 3) & 0x00FF);
 }
 
 void InputThrottler::DeviceUpdate(const InputUpdate& state)
@@ -65,6 +82,43 @@ void    InputThrottler::UpdateRateChanged(unsigned int ms)
         _sleepRate = ms;
 }
 
+void    InputThrottler::DeviceBtnUpdate( eBtnState state, int btnID )
+{
+    if( state == eDown )
+    {
+        if( btnID == 6 )    // Left trigger
+        {
+            // Down
+            if( _actuatorLevel == 0)
+                return;
+
+            _lock.lock();
+
+            --_actuatorLevel;
+            _updated = true;
+
+            emit ActuatorState(_actuatorLevel);
+
+            _lock.unlock();
+        }
+        else if( btnID == 7 )    // Right trigger
+        {
+            // Up
+            if( _actuatorLevel == 3)
+                return;
+
+            _lock.lock();
+
+            ++_actuatorLevel;
+            _updated = true;
+
+            emit ActuatorState(_actuatorLevel);
+
+            _lock.unlock();
+        }
+    }
+}
+
 void    InputThrottler::PrintBits()
 {
     QString msg;
@@ -79,5 +133,6 @@ void    InputThrottler::PrintBits()
             msg.append(" ");
     }
 
-    emit StatusUpdate( eOK, msg);
+    emit BitsUpdate(msg);
 }
+

@@ -44,6 +44,9 @@ class MainWindow : public QMainWindow
                           const QString& message);
 
         void updateLCD();
+        void BitsUpdate(const QString& bits);
+
+        void ActuatorState( int level );
 
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();

@@ -48,6 +48,7 @@ void MainWindow::Initialize()
 
     qRegisterMetaType<eStatus>("eStatus");
     qRegisterMetaType<InputUpdate>("InputUpdate");
+    qRegisterMetaType<eBtnState>("eBtnState");
 
     _logger = new QFile("EDTPanel.log");
     _ui->pushButtonLog->setStyleSheet("color: green");
@@ -81,11 +82,20 @@ void MainWindow::Initialize()
     connect(_joystickConnector, SIGNAL(DeviceUpdate(const InputUpdate&)),
                                        _inputThrottler, SLOT(DeviceUpdate(const InputUpdate&)));
 
+    connect(_joystickConnector, SIGNAL(DeviceBtnUpdate(eBtnState, int)),
+                                       _inputThrottler, SLOT(DeviceBtnUpdate(eBtnState, int)));
+
     connect(_inputThrottler, SIGNAL(PublishMessage(const QByteArray&)),
                                        _udpBroadcaster, SLOT(PublishMessage(const QByteArray&)));
 
+    connect(_inputThrottler, SIGNAL(ActuatorState(int)),
+                                       this, SLOT(ActuatorState(int)));
+
     connect(_udpBroadcaster, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
                                        this, SLOT(StatusUpdate(const eStatus&, const QString&)));
+
+    connect(_inputThrottler, SIGNAL(BitsUpdate(const QString&)),
+                                       this, SLOT(BitsUpdate(const QString&)));
 
     _inputThrottler->start();
     _joystickConnector->start();
@@ -94,6 +104,9 @@ void MainWindow::Initialize()
     connect(_lcdTimer, SIGNAL(timeout()), this, SLOT(updateLCD()));\
 
     ResetLCD();
+
+    _ui->labelJoyHz->setText( QString::number(1000.0 / (double)_ui->horizontalRateSlider->value(),
+                                              'f', 2) );
 }
 
 void MainWindow::ResetLCD()
@@ -102,6 +115,11 @@ void MainWindow::ResetLCD()
     _ui->countdownTimer->display("10.00");
     _lcdTimeValue = QTime(0, TIME_IN_GAME, 0);
     _ui->countdownTimer->setPalette(Qt::green);
+}
+
+void MainWindow::BitsUpdate(const QString& bits)
+{
+    _ui->labelBits->setText(bits);
 }
 
 void MainWindow::updateLCD()
@@ -148,16 +166,23 @@ void MainWindow::DeviceUpdate(const InputUpdate& state)
     _ui->labelJoyYRightValue->setText(QString::number( state.AxisRight().Y()));
 }
 
+void MainWindow::ActuatorState( int level )
+{
+    _ui->lcdActuatorNumber->display( level );
+}
+
 void MainWindow::on_horizontalRateSlider_sliderReleased()
 {
     _ui->lcdRateNumber->display( _ui->horizontalRateSlider->value());
+
+    emit UpdateRateChanged(_ui->horizontalRateSlider->value());
 }
 
 void MainWindow::on_horizontalRateSlider_valueChanged(int value)
 {
     _ui->lcdRateNumber->display(value);
 
-    emit UpdateRateChanged(value);
+    _ui->labelJoyHz->setText( QString::number(1000.0 / (double)value, 'f', 2) );
 }
 
 void MainWindow::on_pushButtonConnect_clicked()

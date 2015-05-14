@@ -187,16 +187,6 @@ void    JoystickConnector::HandleController(void)
     }
 }
 
-void    JoystickConnector::OnControllerButtonEvent( const SDL_ControllerButtonEvent& event )
-{
-    //qDebug() << "OnControllerButtonEvent";
-}
-
-void    JoystickConnector::OnControllerAxisEvent( const SDL_ControllerAxisEvent& event )
-{
-    //qDebug() << "OnControllerAxisEvent";
-}
-
 void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
 {
     if( event.axis == SDL_CONTROLLER_AXIS_LEFTX )
@@ -233,25 +223,38 @@ void    JoystickConnector::OnJoystickAxisEvent( const SDL_JoyAxisEvent& event)
 
 void    JoystickConnector::OnJoystickButtonEvent( const SDL_JoyButtonEvent& event)
 {
-    //qDebug() << "OnJoystickButtonEvent";
+    if( event.type == SDL_JOYBUTTONDOWN)
+        emit DeviceBtnUpdate( eDown, event.button );
+    else if( event.type == SDL_JOYBUTTONUP)
+        emit DeviceBtnUpdate( eUp, event.button );
 }
 
-void    JoystickConnector::AddControllerEvent( const SDL_ControllerDeviceEvent& event )
+void    JoystickConnector::OnControllerButtonEvent( const SDL_ControllerButtonEvent& )
+{
+    //qDebug() << "OnControllerButtonEvent";
+}
+
+void    JoystickConnector::OnControllerAxisEvent( const SDL_ControllerAxisEvent& )
+{
+    //qDebug() << "OnControllerAxisEvent";
+}
+
+void    JoystickConnector::AddControllerEvent( const SDL_ControllerDeviceEvent& )
 {
     //qDebug() << "AddControllerEvent";
 }
 
-void    JoystickConnector::RemoveControllerEvent( const SDL_ControllerDeviceEvent& event )
+void    JoystickConnector::RemoveControllerEvent( const SDL_ControllerDeviceEvent& )
 {
     //qDebug() << "RemoveControllerEvent";
 }
 
-void    JoystickConnector::AddJoystickEvent( const SDL_JoyDeviceEvent& event)
+void    JoystickConnector::AddJoystickEvent( const SDL_JoyDeviceEvent& )
 {
     //qDebug() << "AddJoystickEvent";
 }
 
-void    JoystickConnector::RemoveJoystickEvent( const SDL_JoyDeviceEvent& event)
+void    JoystickConnector::RemoveJoystickEvent( const SDL_JoyDeviceEvent& )
 {
     //qDebug() << "RemoveJoystickEvent";
 }
