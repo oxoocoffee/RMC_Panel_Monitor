@@ -57,11 +57,11 @@ void InputThrottler::PackBits()
 {
     _byteArray.clear();
 
-    _byteArray[0] = ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
-                    ((_state.AxisLeft().X() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
-    _byteArray[1] = (char)_mode |
+    _byteArray[0] = (char)_mode |
                     ((_actuatorLevel << 3) & 0x00FF) |
                     (char)_digging << 2;
+    _byteArray[1] = ((_state.AxisRight().Y() / JOY_PER_MSG_SCALAR) & 0x0F) |
+                    ((_state.AxisLeft().Y() / JOY_PER_MSG_SCALAR) & 0x0F) << 4;
 }
 
 void InputThrottler::DeviceUpdate(const InputUpdate& state)
@@ -136,12 +136,12 @@ void    InputThrottler::PrintBits()
     QString msg;
 
     // Convert from QByteArray to QBitArray
-    for(int i=_byteArray.count()-1; i >=0 ; --i)
+    for(int i = 0; i <_byteArray.count() ; ++i)
     {
         for(int b(0); b < 8; ++b)
             msg.append( (_byteArray.at(i) & (1<<(7-b))) ? '1' : '0');
 
-        if( i != 0 )
+        if( i < _byteArray.count() )
             msg.append(" ");
     }
 

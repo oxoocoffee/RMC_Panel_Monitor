@@ -242,6 +242,7 @@ void MainWindow::OpenNetworkConnection()
         _ui->spinBoxControlPort->setEnabled(false);
         _ui->spinBoxVideoPort->setEnabled(false);
         _ui->hostAddressTextBox->setEnabled(false);
+        _labelHostName->setText("<b>Connected</b>");
     }
 }
 
@@ -255,6 +256,7 @@ void MainWindow::CloseNetworkConnection()
         _ui->spinBoxControlPort->setEnabled(true);
         _ui->spinBoxVideoPort->setEnabled(true);
         _ui->hostAddressTextBox->setEnabled(true);
+        _labelHostName->setText("<b>Disconnected</b>");
     }
 }
 
