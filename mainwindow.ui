@@ -125,7 +125,7 @@
              <bool>false</bool>
             </property>
             <property name="text">
-             <string extracomment="1">192.168.1.206</string>
+             <string extracomment="1">10.10.10.10</string>
             </property>
             <property name="placeholderText">
              <string/>
@@ -858,8 +858,6 @@
                    </layout>
                   </item>
                  </layout>
-                 <zorder>labelLock</zorder>
-                 <zorder>labelLock</zorder>
                 </widget>
                </item>
                <item>
