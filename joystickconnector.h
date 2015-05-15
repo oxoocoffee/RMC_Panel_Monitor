@@ -55,6 +55,8 @@ class JoystickConnector : public QThread
 
             void     Quit();
 
+            bool     ToggleInputLock();
+
      signals:
         void    DeviceConnected(const QString& label);
         void    DeviceDisconnected(void);
@@ -79,6 +81,7 @@ class JoystickConnector : public QThread
 
      private:
         InputUpdate _currentState;
+        bool        _lockState;
 
     protected:
        void    run(void) Q_DECL_OVERRIDE;

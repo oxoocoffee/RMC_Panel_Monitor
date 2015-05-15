@@ -48,6 +48,7 @@ class MainWindow : public QMainWindow
 
         void ActuatorState( int level );
         void DiggingState(bool enabled);
+        void DeviceBtnUpdate( eBtnState state, int btnID );
 
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();
