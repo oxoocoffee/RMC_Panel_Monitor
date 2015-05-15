@@ -85,6 +85,9 @@ void MainWindow::Initialize()
     connect(_joystickConnector, SIGNAL(DeviceBtnUpdate(eBtnState, int)),
                                        _inputThrottler, SLOT(DeviceBtnUpdate(eBtnState, int)));
 
+    connect(_joystickConnector, SIGNAL(DeviceBtnUpdate(eBtnState, int)),
+                                       this, SLOT(DeviceBtnUpdate(eBtnState, int)));
+
     connect(_inputThrottler, SIGNAL(PublishMessage(const QByteArray&)),
                                        _udpBroadcaster, SLOT(PublishMessage(const QByteArray&)));
 
@@ -110,9 +113,27 @@ void MainWindow::Initialize()
 
     _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(0, 200, 0));
     _ui->labelDig->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
+    _ui->labelLock->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
 
     _ui->labelJoyHz->setText( QString::number(1000.0 / (double)_ui->horizontalRateSlider->value(),
                                               'f', 2) );
+}
+
+void MainWindow::DeviceBtnUpdate( eBtnState state, int btnID )
+{
+    if( state == eDown && btnID == 2 ) // Btn labeled 3 on joy
+    {
+        if( _joystickConnector->ToggleInputLock() )
+        {
+            _ui->labelLock->setText("Control Locked");
+            _ui->labelLock->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
+        }
+        else
+        {
+            _ui->labelLock->setText("Control Enabled");
+            _ui->labelLock->setStyleSheet("QLabel { background-color : rgb(250, 0, 0) }");
+        }
+    }
 }
 
 void MainWindow::ResetLCD()
@@ -179,7 +200,7 @@ void MainWindow::ActuatorState( int level )
     if( level == 0)
         _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(240, 0, 0));
     else if (level == 3)
-        _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(0, 200, 0));
+        _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(255, 255, 0));
     else
         _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(255, 135, 0));
 }

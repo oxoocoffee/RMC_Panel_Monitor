@@ -28,7 +28,7 @@ InputUpdate::eState    InputUpdate::BtnState(unsigned char buttonID) const
 }
 
 JoystickConnector::JoystickConnector(QObject* parent)
-    : QThread(parent), DEAD_ZONE(8000)
+    : QThread(parent), DEAD_ZONE(8000), _lockState(true)
 {
 
 }
@@ -50,6 +50,13 @@ void    JoystickConnector::Quit()
     SDL_PushEvent(&sdlevent);
 
     wait();
+}
+
+bool    JoystickConnector::ToggleInputLock()
+{
+    _lockState = ! _lockState;
+
+    return _lockState;
 }
 
 void    JoystickConnector::run(void)
@@ -144,6 +151,12 @@ void    JoystickConnector::HandleController(void)
         //if( SDL_PollEvent( &event ) )
         if( SDL_WaitEvent(&event ) )
         {
+            if( !( event.type == SDL_JOYBUTTONDOWN && event.jbutton.button == 2) )
+            {
+                if( _lockState )
+                    continue;
+            }
+
             switch( event.type )
             {
                 case SDL_CONTROLLERBUTTONDOWN:

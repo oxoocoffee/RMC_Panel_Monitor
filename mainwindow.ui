@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
-    <height>512</height>
+    <width>734</width>
+    <height>521</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -721,9 +721,9 @@
                  <property name="lineWidth">
                   <number>1</number>
                  </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <layout class="QVBoxLayout" name="verticalLayout_11">
                   <property name="spacing">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <property name="leftMargin">
                    <number>0</number>
@@ -837,9 +837,29 @@
                       </property>
                      </widget>
                     </item>
+                    <item>
+                     <widget class="QLabel" name="labelLock">
+                      <property name="font">
+                       <font>
+                        <pointsize>24</pointsize>
+                       </font>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Box</enum>
+                      </property>
+                      <property name="text">
+                       <string>Control Locked</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </item>
                  </layout>
+                 <zorder>labelLock</zorder>
+                 <zorder>labelLock</zorder>
                 </widget>
                </item>
                <item>
