@@ -10,6 +10,7 @@
 #include "joystickconnector.h"
 #include "inputThrottler.h"
 #include "broadcastudp.h"
+#include "statsMonitor.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,6 +54,7 @@ class MainWindow : public QMainWindow
         void on_pushButtonConnect_clicked();
         void on_horizontalRateSlider_sliderReleased();
         void on_horizontalRateSlider_valueChanged(int value);
+        void StatsUpdate(const Stats& stats);
 
         void on_pushButtonLog_clicked();
 
@@ -65,6 +67,8 @@ class MainWindow : public QMainWindow
         void on_startTimeButton_clicked();
 
         void on_resetTimeButton_clicked();
+
+        void on_pushButtonResetStats_clicked();
 
     private:
         void    LogTrace(const eStatus& status,
@@ -88,6 +92,7 @@ class MainWindow : public QMainWindow
         VideoConnector*     _videoConnector;
         JoystickConnector*  _joystickConnector;
         BroadcastUDP*       _udpBroadcaster;
+        StatsMonitor*       _statsMonitor;
 };
 
 #endif // MAINWINDOW_H

@@ -60,6 +60,7 @@ void MainWindow::Initialize()
 
     _inputThrottler    = new InputThrottler(this);
     _joystickConnector = new JoystickConnector(this);
+    _statsMonitor      = new StatsMonitor(this);
 
     connect(_joystickConnector, SIGNAL(DeviceConnected(const QString&)),
                                        this, SLOT(DeviceConnected(const QString&)));
@@ -103,7 +104,14 @@ void MainWindow::Initialize()
     connect(_inputThrottler, SIGNAL(BitsUpdate(const QString&)),
                                        this, SLOT(BitsUpdate(const QString&)));
 
+    connect(_statsMonitor, SIGNAL(StatusUpdate(const eStatus&, const QString&)),
+                                       this, SLOT(StatusUpdate(const eStatus&, const QString&)));
+
+    connect(_statsMonitor, SIGNAL(StatsUpdate(const Stats&)),
+                                       this, SLOT(StatsUpdate(const Stats&)));
+
     _inputThrottler->start();
+    _statsMonitor->start();
     _joystickConnector->start();
 
     _lcdTimer     = new QTimer(this);
@@ -196,6 +204,7 @@ void MainWindow::DeviceUpdate(const InputUpdate& state)
 void MainWindow::ActuatorState( int level )
 {
     _ui->lcdActuatorNumber->display( level );
+    _ui->progressBarActuator->setValue( level );
 
     if( level == 0)
         _ui->lcdActuatorNumber->setPalette(QColor::fromRgb(240, 0, 0));
@@ -303,6 +312,13 @@ void MainWindow::CloseConnectors(void)
          delete _inputThrottler;
      }
 
+     if( _statsMonitor )
+     {
+         _statsMonitor->requestInterruption();
+         _statsMonitor->wait();
+         delete _statsMonitor;
+     }
+
      if( _udpBroadcaster )
          _udpBroadcaster->Disconnect();
 }
@@ -408,4 +424,20 @@ void MainWindow::on_resetTimeButton_clicked()
     ResetLCD();
 
     _ui->startTimeButton->setText("Start Time");
+}
+
+void MainWindow::StatsUpdate(const Stats& stats)
+{
+    _ui->lineEditTxTotalBytes->setText(QString::number(stats.TxTotalBytes()));
+    _ui->lineEditTxBytesPerSec->setText(QString::number(stats.TxBytesPerSec()));
+    _ui->lineEditTxPacketPerSec->setText(QString::number(stats.TxPacketPerSec()));
+
+    _ui->lineEditRxTotalBytes->setText(QString::number(stats.RxTotalBytes()));
+    _ui->lineEditRxBytesPerSec->setText(QString::number(stats.RxBytesPerSec()));
+    _ui->lineEditRxPacketPerSec->setText(QString::number(stats.RxPacketPerSec()));
+}
+
+void MainWindow::on_pushButtonResetStats_clicked()
+{
+    _statsMonitor->ResetStats();
 }
