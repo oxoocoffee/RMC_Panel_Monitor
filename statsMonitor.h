@@ -9,12 +9,12 @@ class Stats
 {
     friend class StatsMonitor;
 
-    Stats()
-    {
-       Resert();
-    }
-
     public:
+        Stats()
+        {
+           Resert();
+        }
+
         inline uint    TxTotalBytes() const { return _txTotalBytes; }
         inline uint    TxBytesPerSec() const { return _txBytesPerSec; }
         inline uint    TxPacketPerSec() const { return _txPacketPerSec; }
@@ -52,10 +52,15 @@ class StatsMonitor : public QThread
         StatsMonitor(QObject* parent = 0L);
 
         void    ResetStats();
+        void    ToggleInputLock(bool state);
+        void    ToggleConnectionState(bool state);
 
     signals:
         void    StatusUpdate(const eStatus& status, const QString& message);
         void    StatsUpdate(const Stats& stats);
+
+    public slots:
+        void    UpdateTxStats(const QByteArray& buffer);
 
     protected:
        void    run(void) Q_DECL_OVERRIDE;
@@ -63,6 +68,8 @@ class StatsMonitor : public QThread
     private:
        Stats    _stats;
        QMutex   _mutex;
+       bool     _lockState;
+       bool     _connectionState;
 };
 
 #endif // STATSMONITOR_H

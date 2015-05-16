@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "videoconnector.h"
 #include "joystickconnector.h"
+#include "statsMonitor.h"
 #include <QDateTime>
 #include <QStandardItemModel>
 #include <stdexcept>
@@ -47,8 +48,10 @@ void MainWindow::Initialize()
         return;
 
     qRegisterMetaType<eStatus>("eStatus");
+    qRegisterMetaType<eStatus>("eStatus");
     qRegisterMetaType<InputUpdate>("InputUpdate");
     qRegisterMetaType<eBtnState>("eBtnState");
+    qRegisterMetaType<Stats>("Stats");
 
     _logger = new QFile("EDTPanel.log");
     _ui->pushButtonLog->setStyleSheet("color: green");
@@ -92,6 +95,9 @@ void MainWindow::Initialize()
     connect(_inputThrottler, SIGNAL(PublishMessage(const QByteArray&)),
                                        _udpBroadcaster, SLOT(PublishMessage(const QByteArray&)));
 
+    connect(_inputThrottler, SIGNAL(PublishMessage(const QByteArray&)),
+                                       _statsMonitor, SLOT(UpdateTxStats(const QByteArray&)));
+
     connect(_inputThrottler, SIGNAL(ActuatorState(int)),
                                        this, SLOT(ActuatorState(int)));
 
@@ -133,11 +139,13 @@ void MainWindow::DeviceBtnUpdate( eBtnState state, int btnID )
     {
         if( _joystickConnector->ToggleInputLock() )
         {
+            _statsMonitor->ToggleInputLock(true);
             _ui->labelLock->setText("Control Locked");
             _ui->labelLock->setStyleSheet("QLabel { background-color : rgb(0, 200, 0) }");
         }
         else
         {
+            _statsMonitor->ToggleInputLock(false);
             _ui->labelLock->setText("Control Enabled");
             _ui->labelLock->setStyleSheet("QLabel { background-color : rgb(250, 0, 0) }");
         }
@@ -273,6 +281,7 @@ void MainWindow::OpenNetworkConnection()
         _ui->spinBoxVideoPort->setEnabled(false);
         _ui->hostAddressTextBox->setEnabled(false);
         _labelHostName->setText("<b>Connected</b>");
+        _statsMonitor->ToggleConnectionState(true);
     }
 }
 
@@ -287,6 +296,7 @@ void MainWindow::CloseNetworkConnection()
         _ui->spinBoxVideoPort->setEnabled(true);
         _ui->hostAddressTextBox->setEnabled(true);
         _labelHostName->setText("<b>Disconnected</b>");
+        _statsMonitor->ToggleConnectionState(false);
     }
 }
 
