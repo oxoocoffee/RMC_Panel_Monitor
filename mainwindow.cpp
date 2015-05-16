@@ -380,7 +380,7 @@ void MainWindow::on_pushButtonLog_clicked()
     if( _ui->pushButtonLog->isChecked() )
     {
         _ui->pushButtonLog->setStyleSheet("color: red");
-        _ui->pushButtonLog->setText("Log On");
+        _ui->pushButtonLog->setText("Log : On");
         _logger->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 
          QTextStream textStreamLogger(_logger);
@@ -391,11 +391,10 @@ void MainWindow::on_pushButtonLog_clicked()
         QTextStream textStreamLogger(_logger);
         textStreamLogger << "---- Closed ----\n";
         _logger->close();
-        _ui->pushButtonLog->setText("Log Off");
+        _ui->pushButtonLog->setText("Log : Off");
         _ui->pushButtonLog->setStyleSheet("color: green");
     }
 }
-
 
 void MainWindow::on_radioButtonSafe_clicked()
 {

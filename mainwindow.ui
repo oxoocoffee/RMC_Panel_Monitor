@@ -333,7 +333,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Log Off</string>
+             <string>Log : Off</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -630,6 +630,9 @@
                         </property>
                         <property name="textDirection">
                          <enum>QProgressBar::TopToBottom</enum>
+                        </property>
+                        <property name="format">
+                         <string>%v%</string>
                         </property>
                        </widget>
                       </item>
