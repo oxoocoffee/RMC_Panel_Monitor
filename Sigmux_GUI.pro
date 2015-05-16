@@ -17,14 +17,16 @@ SOURCES += main.cpp\
         videoconnector.cpp \
         joystickconnector.cpp \
         broadcastudp.cpp \
-    inputThrottler.cpp
+    inputThrottler.cpp \
+    statsMonitor.cpp
 
 HEADERS  += mainwindow.h \
             videoconnector.h \
             joystickconnector.h \
             broadcastudp.h \
     inputThrottler.h \
-    commonhdr.h
+    commonhdr.h \
+    statsMonitor.h
 
 FORMS    += mainwindow.ui
 
